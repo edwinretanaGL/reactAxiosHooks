@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 class TodoItems extends Component {
 
     createTasks(item) {
-        return <li key={item.id} className="list-group-item list-group-item-action">
+        return <li key={item.key} className="list-group-item list-group-item-action">
             <div className="input-group" >
                 <p key={item.key}>{item.text}</p>
             </div>
