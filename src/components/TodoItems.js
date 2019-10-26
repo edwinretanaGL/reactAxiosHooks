@@ -5,7 +5,7 @@ class TodoItems extends Component {
     createTasks(item) {
         return <li key={item.key} className="list-group-item list-group-item-action">
             <div className="input-group" >
-                <p key={item.key}>{item.text}</p>
+                <p className='label listLabel' key={item.id}>{item.resource.description}</p>
             </div>
         </li>
     }

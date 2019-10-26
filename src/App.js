@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import ToDoList from './components/ToDoList';
 import ToDoItems from './components/TodoItems';
+import awsService from './services/services'
 
 class App extends Component {
   constructor() {
@@ -12,7 +13,16 @@ class App extends Component {
     }
   }
 
-  handleInput = e => {
+  getTodos = async () => {
+    const toDoList = await awsService.getTodos()
+      this.setState({ items: toDoList})
+  }
+
+  componentDidMount() {
+      this.getTodos()
+  }
+
+    handleInput = e => {
     const itemText = e.target.value;
     const currentItem = { text: itemText, key: Date.now()}
     this.setState({currentItem});
