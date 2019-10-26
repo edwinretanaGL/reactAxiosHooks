@@ -8,8 +8,7 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
-      items: [],
-      currentItem: {text:'', key:''},
+      currentItem: {text:''},
     }
   }
 
@@ -27,17 +26,24 @@ class App extends Component {
     const currentItem = { text: itemText, key: Date.now()}
     this.setState({currentItem});
   }
-  addItem = e => {
+  addItem = async e => {
     e.preventDefault()
     const newItem = this.state.currentItem
     if (newItem.text !== '') {
       console.log(newItem)
-      const items = [...this.state.items, newItem]
+
+      await awsService.createTodos(this.state.currentItem.text)
+      this.getTodos()
+
       this.setState({
-        items: items,
-        currentItem: { text: '', key: '' },
+        currentItem: { text: '' },
       })
     }
+  }
+
+  deleteTodos = async (id) => {
+      await awsService.deleteTodos(id);
+      this.getTodos()
   }
 
   inputElement= React.createRef()
@@ -54,6 +60,7 @@ class App extends Component {
             />
             <ToDoItems
                 entries={this.state.items}
+                deleteTodos={this.deleteTodos}
             />
           </header>
         </div>
