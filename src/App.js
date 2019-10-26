@@ -1,71 +1,66 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import ToDoList from './components/ToDoList';
 import ToDoItems from './components/TodoItems';
 import awsService from './services/services'
 
-class App extends Component {
-  constructor() {
-    super()
-    this.state = {
-      currentItem: {text:''},
-    }
-  }
+const App = () => {
+ const [currentItem, setCurrentItem] = useState({ text: ''})
+ const [items, setItems] = useState([])
 
-  getTodos = async () => {
+  async function getTodos () {
     const toDoList = await awsService.getTodos()
-      this.setState({ items: toDoList})
+    setItems(toDoList)
   }
 
-  componentDidMount() {
-      this.getTodos()
-  }
+  useEffect ( () => {
+      const fetchData = async () => {
+          await getTodos()
+      }
+      fetchData()
+  }, [])
 
-    handleInput = e => {
+  const handleInput = e => {
     const itemText = e.target.value;
-    const currentItem = { text: itemText, key: Date.now()}
-    this.setState({currentItem});
+    const newItem = { text: itemText}
+    setCurrentItem(newItem);
   }
-  addItem = async e => {
+  const addItem = async e => {
     e.preventDefault()
-    const newItem = this.state.currentItem
+    const newItem = currentItem
     if (newItem.text !== '') {
       console.log(newItem)
 
-      await awsService.createTodos(this.state.currentItem.text)
-      this.getTodos()
+      await awsService.createTodos(currentItem.text)
+      getTodos()
 
-      this.setState({
-        currentItem: { text: '' },
-      })
+      setCurrentItem({text: ''})
     }
   }
 
-  deleteTodos = async (id) => {
+  const deleteTodos = async (id) => {
       await awsService.deleteTodos(id);
-      this.getTodos()
+      getTodos()
   }
 
-  inputElement= React.createRef()
+  const inputElement= React.createRef()
 
-  render () {
     return (
         <div className="">
           <header className="">
             <ToDoList
-                addItem={this.addItem}
-                inputElement={this.inputElement}
-                handleInput={this.handleInput}
-                currentItem={this.state.currentItem}
+                addItem={addItem}
+                inputElement={inputElement}
+                handleInput={handleInput}
+                currentItem={currentItem}
             />
             <ToDoItems
-                entries={this.state.items}
-                deleteTodos={this.deleteTodos}
+                entries={items}
+                deleteTodos={deleteTodos}
             />
           </header>
         </div>
     );
-  }
 
 }
 

@@ -9,7 +9,7 @@ class TodoItems extends Component {
     }
 
     createTasks = (item) =>{
-        return <li key={item.key} className="list-group-item list-group-item-action">
+        return <li key={item.id} className="list-group-item list-group-item-action">
             <div className="input-group" >
                 <p className='label listLabel' key={item.id}>{item.resource.description}</p>
                 <Button onClick={this.deleteTodo} id={item.id}>Delete</Button>
